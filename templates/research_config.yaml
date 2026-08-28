@@ -1,0 +1,112 @@
+schema_version: 1
+
+project:
+  name: null
+  research_question: null
+  project_type: null  # NEW_PROJECT | EXISTING_PROJECT | PARTIAL_PROJECT | REPLICATION_PROJECT | EXPLORATORY_PROJECT
+
+engine:
+  econometrics: stata
+  orchestration: python
+  stata_executable: null
+
+data:
+  master:
+    path: null
+    immutable: true
+  staging:
+    path: research_system/staging
+
+panel:
+  id: null
+  time: null
+  geographic_code: null
+
+outcomes:
+  primary: null
+  secondary: []
+
+treatment:
+  variable: null
+  cohort_variable: null
+  dose_variable: null
+  comparison_group: null
+
+estimand:
+  primary: null
+
+inference:
+  cluster_variables: []
+  confidence_level: 0.95
+  bootstrap_reps: 1000
+  seed: 20260828
+
+estimators:
+  baseline: null
+  comparisons: []
+
+event_study:
+  enabled: null
+  lead_window: null
+  lag_window: null
+  reference_period: -1
+  simultaneous_bands: true
+
+data_discovery:
+  mode: S3
+  staging_only: true
+  preferred_source_tiers: [1, 2, 3]
+  allow_tier_4_leads: true
+  allow_tier_5_leads: true
+
+transformations:
+  mode: T2
+  allowed:
+    - log
+    - lag_1
+    - lag_2
+    - lag_3
+    - growth_rate
+    - per_capita
+    - share_scaling
+    - regional_mean
+    - neighbor_exposure
+    - leave_one_out
+    - historical_interaction
+    - moving_average
+    - winsorization
+    - standardization
+  require_lineage: true
+
+iv:
+  enabled: null
+  discovery_allowed: true
+  discovered_iv_status: lead_only
+  require_human_candidate_approval: true
+  require_human_final_approval: true
+
+specification_search:
+  strategy: E2_hierarchical
+  max_specs: 50000
+  preserve_all_results: true
+  stop_on_significance: false
+  hard_elimination_reasons:
+    - no_identifying_variation
+    - deterministic_collinearity
+    - inadequate_sample_support
+    - invalid_merge
+    - human_rejected_iv
+  saturation_rounds: 3
+
+multiplicity:
+  report_nominal: true
+  default_adjustments:
+    - holm
+    - bh_fdr
+
+paths:
+  variable_registry: VARIABLE_REGISTRY.yaml
+  project_state: PROJECT_STATE.yaml
+  protocol: RESEARCH_PROTOCOL.md
+  results_db: research_system/results_db
+  agent_decisions: research_system/logs/agent_decisions
