@@ -1,0 +1,7 @@
+gate_id: null
+gate_type: null
+subject_id: null
+subject_version_or_hash: null
+decision: PENDING  # ACCEPT | REJECT | REVISE
+researcher_note: null
+decided_at: null
