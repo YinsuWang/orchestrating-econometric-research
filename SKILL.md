@@ -1,79 +1,61 @@
 ---
 name: orchestrating-econometric-research
-description: Use when conducting a multi-stage empirical econometric study involving causal identification, DID, IV, mechanisms, robustness, heterogeneous effects, external data discovery, or systematic specification search.
+description: Use when conducting a multi-stage empirical econometric study involving causal identification, DID, IV, mechanisms, robustness, heterogeneity, external data discovery, or systematic specification search.
 ---
 
 # Orchestrating Econometric Research
 
 ## Overview
 
-Run empirical econometric research as a persistent, auditable state machine. Stata is the default estimation engine; Python/Codex handles orchestration, discovery, registries, result parsing, search, and reporting.
+Use this skill to run empirical econometric research as a persistent, auditable workflow rather than as isolated regressions. The default stack is **Stata for estimation** and **Python/Codex for orchestration, discovery, parsing, storage, and reporting**.
 
-## Core invariants
+## Non-Negotiable Invariants
 
-- NEVER overwrite the authoritative/master dataset.
-- NEVER discard a specification because it is insignificant, inconvenient, or failed.
-- NEVER promote an IV from statistical strength alone.
-- NEVER merge externally discovered data into the authoritative panel without Human Gate approval.
-- ALWAYS persist specifications, diagnostics, failures, transformations, and agent decisions.
-- Significance is a view over the specification universe, never the stopping rule.
+1. Core rule: **preserve every attempted specification**. Never delete or hide a result because it is insignificant, unstable, inconvenient, or failed.
+2. Never stop specification search merely because significance has been found.
+3. Treat the master dataset as immutable unless the researcher explicitly approves a replacement.
+4. Newly discovered external data enters staging first; promotion requires a Human Gate.
+5. IV discovery is not IV approval. Formal IV testing and promotion follow the two-stage Human Gate in `references/iv-protocol.md`.
+6. Economic interpretation and identification claims remain researcher decisions.
+7. Keep `PROJECT_STATE.yaml` current so work can resume across sessions.
 
-## Default policy
+## Start Here
 
-Use the project contract when present; otherwise default to:
-
-- **D2 data governance:** discover/download/clean into staging; human approval before promotion.
-- **S3 discovery:** official sources, academic databases, replication repositories, then weaker sources as leads only.
-- **T2 transformations:** controlled lags, logs, growth/rates, per-capita/scales, moving averages, leave-one-out, geographic exposure, historical interactions, winsorization, standardization; record lineage.
-- **E2 search:** hierarchical specification search with a finite computation budget and saturation stopping.
-- **Two IV Human Gates:** researcher approves candidates before statistical screening and approves theoretically defensible IVs after IV Cards.
-
-## Workflow
-
-1. **Detect project state.** Classify as new, existing, partially completed, replication, or exploratory.
-2. **Read local authority first.** Read `AGENTS.md`, research protocols, configs, code, results, and data metadata before changing anything.
-3. **Create or validate the project contract.** Use `references/project-contract.md` and templates. Never replace existing project rules silently.
-4. **Audit before estimating.** Map data lineage, estimands, code dependencies, completed analyses, failures, and irreversible operations.
-5. **Advance through the research state machine** in `references/research-workflow.md` and `references/econometric-chain.md`.
-6. **Use Human Gates** exactly as defined in `references/human-gates.md` and `references/iv-protocol.md`.
-7. **Run Stata through a parameterized execution layer** according to `references/stata-protocol.md`.
-8. **Search specifications hierarchically**, preserve the denominator, and use saturation—not significance—to stop. Read `references/specification-search.md`.
-9. **Report the complete evidence surface** according to `references/reporting.md`.
-10. Update `PROJECT_STATE.yaml` after every material state transition.
-
-## Required references
-
-Read only what the current phase needs:
-
-- Project setup/audit: `references/project-contract.md`, `references/research-workflow.md`
-- Data discovery: `references/data-discovery.md`
-- DID/IV/mechanisms/robustness: `references/econometric-chain.md`
-- IV work: `references/iv-protocol.md`, `references/human-gates.md`
-- Stata execution: `references/stata-protocol.md`
-- Specification search: `references/specification-search.md`
-- Final synthesis: `references/reporting.md`
-
-## Project initialization
-
-For a project that does not yet have the contract files, run:
+1. Detect whether the project is new, existing, partial, exploratory, or replication-oriented.
+2. Read project instructions and existing research artifacts before modifying anything.
+3. Read `references/research-workflow.md` and `references/project-contract.md`.
+4. If the project contract is absent, initialize non-destructively:
 
 ```bash
 python <skill-dir>/scripts/init_project.py <project-root>
 python <skill-dir>/scripts/validate_project.py <project-root>
 ```
 
-The initializer is non-destructive: it creates only missing files/directories.
+5. Populate `research_config.yaml` from project evidence. Do not guess materially important research definitions.
+6. Set or update `PROJECT_STATE.yaml` before executing a research phase.
 
-## Stop conditions
+## Phase-Specific References
 
-Stop the affected branch and request researcher action when:
+- External data or new variables → `references/data-discovery.md`
+- DID, event studies, IV-DID, mechanisms, robustness, heterogeneity → `references/econometric-chain.md`
+- IV candidate work → `references/iv-protocol.md`
+- Large model/specification search → `references/specification-search.md`
+- Stata execution and wrappers → `references/stata-protocol.md`
+- Approval boundaries → `references/human-gates.md`
+- Tables, diagnostics, synthesis → `references/reporting.md`
 
-- staging data is ready for promotion;
-- a discovered IV lead requires candidate approval;
-- a statistically viable IV requires theoretical review;
-- the treatment/estimand definition would materially change;
-- the primary sample would materially change;
-- an irreversible change to authoritative data is proposed;
-- required software/data/credentials are unavailable.
+## Default Policies
 
-Do not replace a Human Gate with an automated heuristic.
+Unless the researcher specifies otherwise:
+
+- External data: **D2 staging-only**.
+- Discovery scope: **S3**, with source tiers and verification.
+- Transformations: **T2 controlled transformations** with lineage.
+- Search: **E2 hierarchical specification search**.
+- Control variables: theory-based families/blocks, not arbitrary random subsets.
+- Mechanisms: evaluate families with multiple proxies where feasible.
+- Multiplicity: report nominal and multiplicity-adjusted evidence when many hypotheses/specifications are examined.
+
+## Completion Rule
+
+A phase is complete only when outputs, diagnostics, failed attempts, decisions, and state transitions are persisted. If a Human Gate is reached, create the review artifact, set state to `HUMAN_REVIEW_REQUIRED`, and stop that branch of the workflow.
