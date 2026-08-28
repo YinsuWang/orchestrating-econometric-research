@@ -1,0 +1,32 @@
+iv_id: null
+name: null
+variable: null
+source: user_provided  # user_provided | discovered_lead
+candidate_status: PENDING_HUMAN_GATE_1
+
+construction:
+  formula: null
+  timing: null
+  source_variables: []
+
+screening_authorization:
+  status: PENDING
+  decision_record: null
+
+statistical_screen:
+  status: NOT_RUN
+  first_stage_beta: null
+  first_stage_se: null
+  first_stage_p: null
+  conventional_f: null
+  kp_f: null
+  partial_r2: null
+  sw_f: null
+  underidentification: null
+  anderson_rubin: null
+  notes: null
+
+final_theory_review:
+  status: NOT_READY
+  iv_card: null
+  decision_record: null
