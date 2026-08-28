@@ -1,0 +1,20 @@
+schema_version: 1
+current_phase: INITIALIZATION
+current_status: PENDING
+
+completed_phases: []
+blocked_phases: []
+
+human_gates:
+  pending: []
+  resolved: []
+
+active_specifications: []
+failed_specifications: []
+
+last_completed_action: null
+next_action:
+  type: AUDIT_OR_CONFIGURE
+  description: Audit the project and populate research_config.yaml from evidence.
+
+updated_at: null
