@@ -1,0 +1,37 @@
+{
+  "spec_id": null,
+  "hypothesis_family": null,
+  "outcome": null,
+  "treatment": null,
+  "estimator": null,
+  "controls": [],
+  "control_families": [],
+  "instruments": [],
+  "mechanism": null,
+  "heterogeneity_dimension": null,
+  "transformations": [],
+  "sample_rule": null,
+  "fixed_effects": [],
+  "cluster_variables": [],
+  "event_study": null,
+  "result": {
+    "status": "PENDING",
+    "estimate": null,
+    "std_error": null,
+    "ci_low": null,
+    "ci_high": null,
+    "p_value": null,
+    "n": null,
+    "clusters": null,
+    "diagnostics": {},
+    "failure_class": null,
+    "failure_detail": null
+  },
+  "provenance": {
+    "data_version": null,
+    "code_version": null,
+    "command_log": null,
+    "started_at": null,
+    "completed_at": null
+  }
+}
